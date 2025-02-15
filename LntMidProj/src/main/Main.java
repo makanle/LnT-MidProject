@@ -59,7 +59,7 @@ public class Main {
 		while(true) {
 			System.out.print("Input Jenis Kelamin [Laki-laki | Perempuan] (Case Sensitive): ");	
 			gend = scan.nextLine();
-			if(!(gend == "Laki-laki") || !(gend == "Perempuan")) {
+			if(!(gend.equals("Laki-laki")) || !(gend.equals("Perempuan") )) {
 				System.out.println("invalid input");
 			} else {
 				break;
@@ -68,7 +68,7 @@ public class Main {
 		while(true) {
 			System.out.print("Input Jabatan [Manager | Supervisor | Admin] (Case Sensitive): ");
 			job = scan.nextLine();
-			if(!(job == "Manager") || !(job == "Supervisor") || !(job == "Admin")) {
+			if(!(job.equals("Manager")) || !(job.equals("Supervisor")) || !(job.equals("Admin"))) {
 				System.out.println("invalid input");
 			} else {
 				break;
@@ -79,11 +79,11 @@ public class Main {
 		emplist.add(new Employee(count, name, gend, job, id));
 		count++;
 		System.out.println("Berhasil menambahkan karyawan dengan id " + id);
-		if(job == "Manager") {
+		if(job.equals("Manager")) {
 			mgrcount++;
-		}else if(job == "Supervisor") {
+		}else if(job.equals("Supervisor")) {
 			supcount++;
-		}else if(job == "Admin") {
+		}else if(job.equals("Admin")) {
 			admcount++;
 		}
 		checkBonus(job);
@@ -181,7 +181,7 @@ public class Main {
 			if(input == "0") {
 				break;
 			}
-			else if(!(gend == "Laki-laki") || !(gend == "Perempuan")) {
+			else if(!(gend.equals("Laki-laki")) || !(gend.equals("Perempuan")) ) {
 				System.out.println("invalid input");
 			} else {
 				gend = input;
@@ -246,7 +246,7 @@ public class Main {
 	
 	public void checkBonus(String job) {
 		mergeSort2(emplist, 0, emplist.size() - 1);
-		if(job == "Manager") {
+		if(job.equals("Manager")) {
 			if(mgrcount % 3 != 1) {
 				return;
 			}
@@ -261,7 +261,7 @@ public class Main {
 				 
 			}
 		}
-		if(job == "Supervisor") {
+		if(job.equals("Supervisor")) {
 			if(supcount % 3 != 1) {
 				return;
 			}
@@ -275,7 +275,7 @@ public class Main {
 				
 			}
 		}
-		if(job == "Admin") {
+		if(job.equals("Admin")) {
 			if(admcount % 3 != 1) {
 				return;
 			}
