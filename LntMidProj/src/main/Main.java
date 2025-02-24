@@ -9,7 +9,7 @@ public class Main {
 	int supcount = 0;
 	int mgrcount = 0;
 	int admcount = 0;
-	int count = 0;
+	int empcount = 0;
 	ArrayList<Employee> emplist = new ArrayList<Employee>();
 	
 	public Main() {
@@ -24,7 +24,7 @@ public class Main {
 			int choice = scan.nextInt();
 			switch(choice) {
 				case 1:
-					addemp();
+					addemp(emplist);
 					break;
 				case 2:
 					listview(emplist);
@@ -41,7 +41,7 @@ public class Main {
 		}
 	}
 	
-	public void addemp(){
+	public void addemp(ArrayList<Employee> A){
 		String name;
 		String gend; 
 		String job;
@@ -76,8 +76,8 @@ public class Main {
 		}
 		
 		id = genid();
-		emplist.add(new Employee(count, name, gend, job, id));
-		count++;
+		emplist.add(new Employee(empcount, name, gend, job, id));
+		empcount++;
 		System.out.println("Berhasil menambahkan karyawan dengan id " + id);
 		if(job.equals("Manager")) {
 			mgrcount++;
@@ -90,7 +90,7 @@ public class Main {
 	}
 	
 	public void listview(ArrayList<Employee> A) {
-		mergeSort(A, 0, A.size());
+		mergeSort(A, 0, A.size()); // sort by name every time the menu is chosen
 		System.out.println("|-----|---------------------|" + padding("", maxpad(emplist), '-', true) + "|---------------|-------------|---------------|");
 		System.out.println("|No   |Kode Karyawan        |" + padding("Nama Karyawan", maxpad(emplist), ' ', true) + "|Jenis Kelamin  |Jabatan      |Gaji Karyawan  |");
 		System.out.println("|-----|---------------------|" + padding("", maxpad(emplist), '-', true) + "|---------------|-------------|---------------|"); 
@@ -153,11 +153,11 @@ public class Main {
 		gend = emplist.get(index - 1).getgend();
 		job = emplist.get(index - 1).getJob();
 		// subtract the count first
-		if(job == "Manager") {
+		if(job.equals("Manager")) {
 			mgrcount--;
-		}else if(job == "Supervisor") {
+		}else if(job.equals("Supervisor")) {
 			supcount--;
-		}else if(job == "Admin") {
+		}else if(job.equals("Admin")) {
 			admcount--;
 		}
 		
@@ -165,7 +165,7 @@ public class Main {
 		
 			System.out.print("Input Nama Karyawan [>=3]: ");
 			input = scan.nextLine();
-			if(input == "0") {
+			if(input.equals("0")) {
 				break;
 			}
 			else if(name.length() < 3) {
@@ -178,7 +178,7 @@ public class Main {
 		while(true) {
 			System.out.print("Input Jenis Kelamin [Laki-laki | Perempuan] (Case Sensitive): ");	
 			input = scan.nextLine();
-			if(input == "0") {
+			if(input.equals("0")) {
 				break;
 			}
 			else if(!(gend.equals("Laki-laki")) || !(gend.equals("Perempuan")) ) {
@@ -191,21 +191,24 @@ public class Main {
 		while(true) {
 			System.out.print("Input Jabatan [Manager | Supervisor | Admin] (Case Sensitive): ");
 			input = scan.nextLine();
-			if(input == "0") {
+			if(input.equals("0")) {
 				break;
 			}
-			else if(!(job == "Manager") || !(job == "Supervisor") || !(job == "Admin")) {
+			else if(!(job.equals("Manager")) || !(job.equals("Supervisor")) || !(job.equals("Admin"))) {
 				System.out.println("invalid input");
 			}else {
 				job = input;
 			}
 			
-			if(job == "Manager") {
+			if(job.equals("Manager")) {
 				mgrcount++;
-			}else if(job == "Supervisor") {
+				break;
+			}else if(job.equals("Supervisor")) {
 				supcount++;
-			}else if(job == "Admin") {
+				break;
+			}else if(job.equals("Admin")) {
 				admcount++;
+				break;
 			}
 		}
 		
@@ -215,7 +218,7 @@ public class Main {
 		System.out.println("Berhasil mengupdate karyawan dengan id " + p1.getId());
 	}
 	
-	public void remove(ArrayList<Employee> emplist2) {
+	public void remove(ArrayList<Employee> emplist) {
 		int choice;
 		System.out.print("Input nomor urutan karyawan yang ingin dihapus: ");
 		choice = scan.nextInt();
@@ -224,6 +227,13 @@ public class Main {
 			return;
 		} else {
 			emplist.remove(choice - 1);
+		}
+		empcount--;
+		
+		// reorder the creation date
+		mergeSort2(emplist, 0, emplist.size() - 1);
+		for(int i=0 ; i<emplist.size() ; i++) {
+			emplist.get(i).setOrder(i);
 		}
 	}
 	
@@ -246,45 +256,49 @@ public class Main {
 	
 	public void checkBonus(String job) {
 		mergeSort2(emplist, 0, emplist.size() - 1);
+		int counter = 0;
 		if(job.equals("Manager")) {
 			if(mgrcount % 3 != 1) {
 				return;
 			}
 			System.out.print("Bonus Sebesar 10% telah diberikan kepada karyawan dengan id ");
 			int amnt = (int)Math.floor(mgrcount / 3); 
-			for(int i = 0 ; i < amnt ; i++) {
-				if(emplist.get(i).getJob() == job){
+			for(int i = 0 ; i < emplist.size() ; i++) {
+				if(emplist.get(i).getJob().equals(job) && counter <= amnt){
 					double salary = emplist.get(i).getSalary();
 					emplist.get(i).setSalary(salary + (salary * 0.1));
 					System.out.println(emplist.get(i).getId());
+					amnt++;
 				}
 				 
 			}
 		}
-		if(job.equals("Supervisor")) {
+		else if(job.equals("Supervisor")) {
 			if(supcount % 3 != 1) {
 				return;
 			}
 			int amnt = (int)Math.floor(supcount / 3);
-			for(int i = 0 ; i < amnt ; i++) {
-				if(emplist.get(i).getJob() == job){
+			for(int i = 0 ; i < emplist.size() ; i++) {
+				if(emplist.get(i).getJob().equals(job) && counter <= amnt){
 					double salary = emplist.get(i).getSalary();
 					emplist.get(i).setSalary(salary + (salary * 0.075));
 					System.out.println(emplist.get(i).getId());
+					amnt++;
 				}
 				
 			}
 		}
-		if(job.equals("Admin")) {
+		else if(job.equals("Admin")) {
 			if(admcount % 3 != 1) {
 				return;
 			}
 			int amnt = (int)Math.floor(admcount / 3);
-			for(int i = 0 ; i < amnt ; i++) {
-				if(emplist.get(i).getJob() == job){
+			for(int i = 0 ; i < emplist.size() ; i++) {
+				if(emplist.get(i).getJob().equals(job) && counter <= amnt){
 					double salary = emplist.get(i).getSalary();
 					emplist.get(i).setSalary(salary + (salary * 0.05));
 					System.out.println(emplist.get(i).getId());
+					amnt++;
 				}
 			}
 		}
@@ -400,9 +414,9 @@ public class Main {
 	public void mergeSort2(ArrayList<Employee> A, int left, int right) {
 	    if (left < right) {
 	        int mid = left + (right - left) / 2;
-	        mergeSort(A, left, mid);
-	        mergeSort(A, mid + 1, right);
-	        merge(A, left, mid, right);
+	        mergeSort2(A, left, mid);
+	        mergeSort2(A, mid + 1, right);
+	        merge2(A, left, mid, right);
 	    }
 	}
 	
