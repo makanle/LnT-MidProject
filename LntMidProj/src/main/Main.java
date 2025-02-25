@@ -49,7 +49,7 @@ public class Main {
 		while(true) {
 			
 			System.out.print("Input Nama Karyawan [>=3]: ");
-			name = scan.next();
+			name = scan.nextLine();
 			if(name.length() < 3) {
 				System.out.println("name is less than 3 characters");
 			} else {
@@ -59,19 +59,19 @@ public class Main {
 		while(true) {
 			System.out.print("Input Jenis Kelamin [Laki-laki | Perempuan] (Case Sensitive): ");	
 			gend = scan.nextLine();
-			if(!(gend.equals("Laki-laki")) || !(gend.equals("Perempuan") )) {
-				System.out.println("invalid input");
-			} else {
+			if(gend.equals("Laki-laki") || gend.equals("Perempuan") ) {
 				break;
+			} else {
+				System.out.println("invalid input");
 			}
 		}
 		while(true) {
 			System.out.print("Input Jabatan [Manager | Supervisor | Admin] (Case Sensitive): ");
 			job = scan.nextLine();
-			if(!(job.equals("Manager")) || !(job.equals("Supervisor")) || !(job.equals("Admin"))) {
-				System.out.println("invalid input");
-			} else {
+			if(job.equals("Manager") || job.equals("Supervisor") || job.equals("Admin")) {
 				break;
+			} else {
+				System.out.println("invalid input");
 			}
 		}
 		
@@ -230,15 +230,17 @@ public class Main {
 		}
 		empcount--;
 		
-		// reorder the creation date
+		// reorder the creation order
 		mergeSort2(emplist, 0, emplist.size() - 1);
 		for(int i=0 ; i<emplist.size() ; i++) {
 			emplist.get(i).setOrder(i);
 		}
+		
+		
 	}
 	
 	public String genid() {
-		StringBuilder id = new StringBuilder(8);
+		StringBuilder id = new StringBuilder(10);
 		String Alphstr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		String Numstr = "0123456789";
 		for(int i=0 ; i<=1 ; i++) {
@@ -247,7 +249,7 @@ public class Main {
 		}
 		id.append("-");
 		for(int i=3 ; i<=6 ; i++) {
-			int index = (int) (26 * Math.random());
+			int index = (int) (10 * Math.random());
 			id.append(Numstr.charAt(index));
 		}
 		
@@ -258,7 +260,7 @@ public class Main {
 		mergeSort2(emplist, 0, emplist.size() - 1);
 		int counter = 0;
 		if(job.equals("Manager")) {
-			if(mgrcount % 3 != 1) {
+			if(mgrcount % 3 != 1 || mgrcount < 3) {
 				return;
 			}
 			System.out.print("Bonus Sebesar 10% telah diberikan kepada karyawan dengan id ");
@@ -274,7 +276,7 @@ public class Main {
 			}
 		}
 		else if(job.equals("Supervisor")) {
-			if(supcount % 3 != 1) {
+			if(supcount % 3 != 1 || supcount < 3) {
 				return;
 			}
 			int amnt = (int)Math.floor(supcount / 3);
@@ -289,7 +291,7 @@ public class Main {
 			}
 		}
 		else if(job.equals("Admin")) {
-			if(admcount % 3 != 1) {
+			if(admcount % 3 != 1 || admcount < 3) {
 				return;
 			}
 			int amnt = (int)Math.floor(admcount / 3);
